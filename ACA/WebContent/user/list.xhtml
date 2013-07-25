@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:components="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+	
+	<h:form id="form"> 
+		<p:dataTable id="listTable" value="#{userController.list}" var="user"
+				paginator="true" rows="10"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+			<p:column headerText="Id">
+				<h:outputText value="#{user.id}" />
+    			</p:column>
+			<p:column headerText="Nombre">
+				<h:outputText value="#{user.name}" />
+    			</p:column>
+			<p:column headerText="Apellido">
+				<h:outputText value="#{user.lastname}" />
+    			</p:column>
+			<p:column headerText="E-mail">
+				<h:outputText value="#{user.mail}" />
+    			</p:column>
+    		<p:column headerText="Actions">
+    				<p:commandButton action="edit" icon="ui-icon-pencil"/>
+    				<p:commandButton actionListener="#{userController.remove(user.id)}" update="listTable" icon="ui-icon-trash"/>
+    			</p:column>
+		</p:dataTable>
+	</h:form>
+
+	</ui:define>
+</ui:composition>
+
+</html>

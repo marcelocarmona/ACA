@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//WebContent/perfilSocio.html=UTF-8
+encoding//WebContent/welcomeOperadorDeUnidad.html=UTF-8
+encoding//WebContent/welcomeSocio.html=UTF-8
+encoding//src/backingBeans/LoginBean.java=UTF-8
+encoding//src/model/AdministradorCentral.java=UTF-8
+encoding//src/model/OperadorCentral.java=UTF-8
+encoding//src/model/OperadorDeUnidad.java=UTF-8

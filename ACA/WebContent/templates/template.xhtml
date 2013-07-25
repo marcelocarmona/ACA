@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <h:outputStylesheet library="css" name="style.css" />
+  <title><ui:insert name="title">ACA</ui:insert></title>
+</h:head>
+
+<h:body>
+<!-- <ui:debug hotkey="x" rendered="#{initParam['javax.faces.FACELETS_DEVELOPMENT']}"/> -->
+	<div id="header">
+		<div class="wrapper">
+			<div id="logo">
+				<a>ACA</a>
+			</div>
+			<div id="sublogo">Asociación Celíaca Argentina</div>
+			<ul id="nav" class="links">
+				<li class="dropdown"><h:link value="Login" outcome="login" /></li>
+			</ul>
+		</div>
+	</div>
+
+
+	<div id="mainContent">
+	<ui:insert name="content">
+	
+	<h:form>
+	
+		<p:layout style="min-width:400px;height:550px;" id="layout">  
+		
+	    <p:layoutUnit position="west" resizable="false" size="400" minSize="40" maxSize="200">  
+	        	<p:growl id="messages" />
+					<p:menu>
+						<p:submenu label="Unidad Central">
+							<p:menuitem value="Save" actionListener="#{menuBean.save}" update="messages ajaxpanel" icon="ui-icon-disk" />
+							<p:menuitem value="Update" actionListener="#{menuBean.update}" update="messages ajaxpanel" icon="ui-icon-arrowrefresh-1-w" />
+						</p:submenu>
+						<p:submenu label="Non-Ajax Menuitem">
+							<p:menuitem value="Delete" actionListener="#{menuBean.delete}"
+								update="messages" ajax="false" icon="ui-icon-close" />
+						</p:submenu>
+						<p:submenu label="Navigations">
+							<p:menuitem value="External" url="http://www.primefaces.org"
+								icon="ui-icon-home" />
+							<p:menuitem value="Internal" outcome="/index.xhtml"
+								icon="ui-icon-star" />
+						</p:submenu>
+						<p:submenu label="Navigations">
+							<p:menuitem value="Unidades" url="http://www.primefaces.org" />
+							<p:menuitem value="Instituciones" url="http://www.primefaces.org" />
+							<p:menuitem value="Productos" url="http://www.primefaces.org" />
+							<p:menuitem value="Medicamentos" url="http://www.primefaces.org" />
+							<p:menuitem value="p-Usurios" url="http://www.primefaces.org" />
+						</p:submenu>
+					</p:menu> 
+	    </p:layoutUnit>  
+  
+    <p:layoutUnit id="content" position="center">  
+			<h:outputText value="#{menuBean.name}" id="display" /> 
+			<h:panelGroup id="ajaxpanel" >
+				<h:panelGroup rendered="#{menuBean.activePage == 'a'}">
+					<ui:include src="../a2.xhtml"/>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{menuBean.activePage == 'b'}">
+					<ui:include src="../a2.xhtml"/>
+				</h:panelGroup>
+			</h:panelGroup>
+
+			
+			<ui:insert name="content">
+    			Content area.  See comments below this line in the source.
+    			<!--  include your content file or uncomment the include below and create content.xhtml in this directory -->
+				<!-- <div> -->
+				<!-- <ui:include src="content.xhtml"/> -->
+				<!-- </div> -->
+			</ui:insert> 
+    </p:layoutUnit>  
+	</p:layout>  
+
+		
+	</h:form>
+	</ui:insert>
+	</div>
+
+<div id="footer">
+  <ui:insert name="footer">
+    	UNLP - Java y Aplicaciones Avanzadas - Carmona Marcelo - 2013
+  </ui:insert>
+</div>
+
+</h:body>
+
+</html>
