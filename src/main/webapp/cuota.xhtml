@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="Información Mensual de las Cuotas (AdministradorCentral)" style="margin-bottom:20px" rendered="#{sessionBean.user.esAdministradorDeUnidadCentral() and !cuotaController.isEditing()}">
+		Socios que no se le emitieron cuotas este mes <span class="redInfo" >#{cuotaController.sociosSinCuotas}</span>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputText value="monto" />
+				<p:spinner value="#{cuotaController.cuota.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton  action="#{cuotaController.batchSave}" value="Batch Save" ajax="false" />
+			</h:panelGroup>
+
+		</h:form>
+	</p:fieldset>
+
+	<p:fieldset legend="Cuota (Administrador)" style="margin-bottom:20px" rendered="#{sessionBean.user.esAdministradorDeUnidad()}">
+	<h:form id="formCreate"><p:focus />
+	
+		<h:inputHidden value="#{cuotaController.cuota.id}" />
+		<h:panelGrid id="data"  columns="2">
+	
+			<h:outputText value="Socio" />
+			<p:selectOneMenu value="#{cuotaController.user.id}" required="true"  >	
+				<f:selectItems value="#{cuotaController.usuarios}" var="user" itemValue="#{user.id}" itemLabel="#{user.name} - #{user.unidad.name}"/>  
+			</p:selectOneMenu>
+	
+			<h:outputText value="monto" />
+			<p:spinner value="#{cuotaController.cuota.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>
+
+		</h:panelGrid>
+		<h:panelGroup>
+				<p:commandButton  action="#{cuotaController.save}" value="Save" rendered="${!cuotaController.isEditing()}" ajax="false" />
+	
+				<p:commandButton  action="#{cuotaController.merge}" value="Update" rendered="${cuotaController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{cuotaController.editing}"/>
+				</p:commandButton>
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+	<!-- table todas las cuotas -->
+		
+		<p:dataTable id="listTable" value="#{cuotaController.cuotas}" var="cuota" style="margin-bottom:20px" rendered="#{sessionBean.user.esAdministradorDeUnidad()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+			
+			<f:facet name="header">  
+	            Todas las cuotas (Administrador)
+	        </f:facet>  
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{cuota.id}" />
+    			</p:column>
+    		<p:column headerText="fechaDeEmision">
+				<h:outputText value="#{cuota.fechaDeEmision}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="#{cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="#{cuota.year}" />
+    			</p:column>
+    		<p:column headerText="Socio_id">
+				<h:outputText value="#{cuota.socio.id}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${cuotaController.getUserSocio(cuota).name}" />
+    			</p:column>
+
+    		<p:column headerText="monto">
+				<h:outputText value="#{cuota.monto}" >
+					    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+                </h:outputText>
+            </p:column>
+            <p:column headerText="monto a pagar">
+				<h:outputText value="#{cuota.montoAPagar}" >
+					    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+                </h:outputText>
+    			</p:column>
+    		<p:column headerText="Actions" width="1" >			
+		    		<h:form>
+		    			<p:commandButton action="#{cuotaController.edit(cuota)}"  icon="ui-icon-pencil" ajax="false">
+		    				<f:setPropertyActionListener target="#{cuotaController.editing}" value="true" />
+		    			</p:commandButton>
+		
+		    			<p:commandButton action="#{cuotaController.remove(cuota)}" icon="ui-icon-trash" ajax="false"/>
+		    		</h:form>
+    			</p:column>
+    			
+    		<f:facet name="footer"><p/></f:facet> 
+		</p:dataTable>
+		
+		
+
+	<!-- table Mis cuotas pendientes como socio -->
+		
+		<p:dataTable value="#{cuotaController.listMisCuotasPendientes}" var="cuota" style="margin-bottom:20px" rendered="${sessionBean.user.esSocio() or sessionBean.user.esSocioVirtual()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+			
+			<f:facet name="header">  
+	           Mis Cuotas Pendientes (Socio)
+	        </f:facet>  
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{cuota.id}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="#{cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="#{cuota.year}" />
+    			</p:column>
+    		<p:column headerText="Socio_id">
+				<h:outputText value="#{cuota.socio.id}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${cuotaController.getUserSocio(cuota).name}" />
+    			</p:column>
+
+    		<p:column headerText="monto">
+				<h:outputText value="#{cuota.monto}" >
+					    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+                </h:outputText>
+    			</p:column>
+    		<p:column headerText="monto a pagar">
+				<h:outputText value="#{cuota.montoAPagar}" >
+					    <f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+                </h:outputText>
+    			</p:column>
+    		<p:column headerText="Actions" width="1" rendered="#{sessionBean.user.esAdministradorDeUnidad()}">			
+		    		<h:form>
+		    			<p:commandButton action="#{cuotaController.edit(cuota)}"  icon="ui-icon-pencil" ajax="false">
+		    				<f:setPropertyActionListener target="#{cuotaController.editing}" value="true" />
+		    			</p:commandButton>
+		
+		    			<p:commandButton action="#{cuotaController.remove(cuota)}" icon="ui-icon-trash" ajax="false"/>
+		    		</h:form>
+    			</p:column>
+    			
+    		<f:facet name="footer"><p/></f:facet>
+		</p:dataTable>
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

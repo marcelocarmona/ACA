@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="Institucion" style="margin-bottom:20px" rendered="#{sessionBean.user.esAdministradorDeUnidadCentral()}">
+	<h:form id="formCreate"><p:focus />
+	
+		<h:inputHidden value="#{institucionController.institucion.id}" />
+		<h:panelGrid id="data"  columns="2">
+	
+			<h:outputText value="Name" />
+			<p:inputText value="#{institucionController.institucion.name}" required="true" requiredMessage="Ingresar nombre de institución" />
+
+		</h:panelGrid>
+		<h:panelGroup>
+				<p:commandButton  action="#{institucionController.save}" value="Save" rendered="${!institucionController.isEditing()}" ajax="false" />
+	
+				<p:commandButton  action="#{institucionController.merge}" value="Update" rendered="${institucionController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{institucionController.editing}"/>
+				</p:commandButton>
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+
+
+
+
+		<p:panel style="margin-bottom:10px" rendered="${sessionBean.getUser().esSocio() or sessionBean.getUser().esSocioVirtual()}">
+			#{institucionController.msgAlDia()}
+		</p:panel>
+		
+		<p:dataTable id="listTable" value="#{institucionController.instituciones}" var="institucion"  rendered="#{institucionController.socioAlDia()}"
+				paginator="false"  rows="0"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+		<f:facet name="header">  
+            Instituciones 
+        </f:facet> 
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{institucion.id}" />
+    			</p:column>
+    		<p:column headerText="Name">
+				<h:outputText value="#{institucion.name}" />
+    			</p:column>
+    		<p:column headerText="Actions" width="1" rendered="#{sessionBean.user.esAdministradorDeUnidadCentral()}">			
+		    		<h:form >
+		    			<p:commandButton action="#{institucionController.edit(institucion)}"  icon="ui-icon-pencil" ajax="false" >
+		    				<f:setPropertyActionListener target="#{institucionController.editing}" value="true" />
+		    			</p:commandButton>
+
+		    			<p:commandButton action="#{institucionController.remove(institucion)}" icon="ui-icon-trash" ajax="false" />
+		    		</h:form>
+    			</p:column>
+    			
+    	<f:facet name="footer"><p/></f:facet> 
+    	
+		</p:dataTable>
+
+
+		<p:dataTable value="#{noSocioController.instituciones}" var="institucion" style="margin-top:20px" rendered="#{sessionBean.user.esNoSocio()}"
+				paginator="false" rows="10"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+			<f:facet name="header">
+				Instituciones que como NoSocio puedo acceder
+			</f:facet> 
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{institucion.id}" />
+    			</p:column>
+    		<p:column headerText="Name">
+				<h:outputText value="#{institucion.name}" />
+    			</p:column>
+    			
+    		<f:facet name="footer"><p/></f:facet> 
+		</p:dataTable>
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

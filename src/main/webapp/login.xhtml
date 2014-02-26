@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/template.xhtml" >
+
+	<ui:define name="content">
+	<h:outputStylesheet library="css" name="login.css" />
+		<h:form id="login" styleClass="box" >
+			<div class="loginTitle">Login</div>
+			<fieldset id="inputs">
+			
+				<p:inputText id="username" value="#{sessionBean.userName}" required="true" onfocus="true" styleClass="username" >
+					<f:validateLength minimum="2" />  <p:focus />
+            	</p:inputText>
+            	<p:watermark for="username" value="User Name" />
+            	
+            	<p:password id="password" value="#{sessionBean.password}" required="true" styleClass="password">
+					<f:validateLength minimum="2" />  
+            	</p:password>
+            	<p:watermark for="password" value="Password" />
+ 
+			</fieldset>
+			<fieldset id="actions">
+				<h:commandButton id="submit" value="Entrar" action="${sessionBean.login()}" styleClass="submit" />
+			</fieldset>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="User" style="margin-bottom:20px" rendered="${userController.accessPermitted()}">
+	<h:form id="formCreate"><p:focus />
+	
+		<h:inputHidden value="#{userController.user.id}" />
+		<h:panelGrid id="data"  columns="2">
+
+			<h:outputText value="Unidad" />
+			<p:selectOneMenu value="#{userController.user.unidad.id}" required="true" >	
+				<f:selectItems value="#{userController.unidades}" var="unidad" itemValue="#{unidad.id}" itemLabel="#{unidad.name} - #{unidad.unidadType} "/>  
+			</p:selectOneMenu>
+			
+			<h:outputText value="name" />
+			<p:inputText value="#{userController.user.name}" required="true" requiredMessage="Ingresar name" />
+			
+			<h:outputText value="password" />
+			<p:inputText value="#{userController.user.password}" required="true" requiredMessage="Ingresar password" />
+			
+			<h:outputText value="lastname" />
+			<p:inputText value="#{userController.user.lastname}" />
+
+			<h:outputText value="dni" />
+			<p:inputText value="#{userController.user.dni}" />
+
+			<h:outputText value="dateOfBirth" />
+			<p:calendar value="#{userController.user.dateOfBirth}" />
+
+			<h:outputText value="phone" />
+			<p:inputText value="#{userController.user.phone}" />
+
+			<h:outputText value="mail" />
+			<p:inputText value="#{userController.user.mail}" />
+			
+			<h:outputText value="address" />
+			<p:inputText value="#{userController.user.address}" />
+			
+			<h:outputText value="profiles" />
+			<p:selectManyCheckbox  id="scroll" value="#{userController.profiles}" showCheckbox="true" required="true" valueChangeListener="#{userController.profileChanged}" layout="pageDirection">  
+	            <f:selectItems value="#{userController.allProfiles}" var="profile" itemLabel="#{profile.profileType}" itemValue="#{profile.profileType}" />    
+	        </p:selectManyCheckbox >
+
+		</h:panelGrid>
+		<h:panelGroup>
+				<p:commandButton  action="#{userController.save}" value="Save" rendered="${!userController.isEditing()}" ajax="false" />
+	
+				<p:commandButton  action="#{userController.merge}" value="Update" rendered="${userController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{userController.editing}"/>
+				</p:commandButton>
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	<!-- Here we start the the data table -->
+		
+		<p:dataTable id="listTable" value="#{userController.users}" var="user" rendered="${userController.accessPermitted()}" 
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+			<f:facet name="header">
+				Usuarios
+			</f:facet> 
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{user.id}" />
+    			</p:column>
+    			
+    		<p:column headerText="name">
+				<h:outputText value="#{user.name}" />
+    			</p:column>
+    			
+    		<p:column headerText="unidad">
+				<h:outputText value="#{user.unidad.name}" />
+    			</p:column>  
+    			
+    		<p:column headerText="lastname">
+				<h:outputText value="#{user.lastname}" />
+    			</p:column>   			
+
+    		<p:column headerText="dni">
+				<h:outputText value="#{user.dni}" />
+    			</p:column>
+
+    		<p:column headerText="phone">
+				<h:outputText value="#{user.phone}" />
+    			</p:column>
+
+    		<p:column headerText="mail">
+				<h:outputText value="#{user.mail}" />
+    			</p:column>
+
+    		<p:column headerText="address">
+				<h:outputText value="#{user.address}" />
+    			</p:column>
+
+    		<p:column headerText="Actions" width="1" >
+				<h:form>
+	    			<p:commandButton action="#{userController.edit(user)}"  icon="ui-icon-pencil" ajax="false" >
+	    				<f:setPropertyActionListener target="#{userController.editing}" value="true" />
+	    			</p:commandButton>
+	
+	    			<p:commandButton action="#{userController.remove(user)}" icon="ui-icon-trash" ajax="false"/>
+				</h:form>
+    		</p:column>
+    		
+    		<f:facet name="footer"><p/></f:facet> 
+		</p:dataTable>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

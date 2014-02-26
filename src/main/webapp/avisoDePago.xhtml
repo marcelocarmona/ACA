@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+	
+
+	<p:fieldset legend="Aviso De Pago (AdministradorCentral)" style="margin-bottom:20px" rendered="#{sessionBean.getUser().esAdministradorDeUnidadCentral()}">
+	<h:form id="formCreate" ><p:focus />
+
+			<h:inputHidden value="#{avisoDePagoController.avisoDePago.id}" />
+			<h:panelGrid  columns="2">
+			
+				<h:outputText value="Cuota" />
+				<p:selectOneMenu value="#{avisoDePagoController.avisoDePago.cuota.id}" required="true"  >	
+					<f:selectItems value="#{avisoDePagoController.cuotas}" var="cuota" itemValue="#{cuota.id}" itemLabel="#{cuota.id} - $ #{cuota.monto} - $ #{cuota.montoAPagar} - #{avisoDePagoController.getUser(cuota.socio).name} - #{cuota.month} - #{cuota.year}"/>  
+				</p:selectOneMenu>
+
+				<h:outputText value="monto" />
+				<p:spinner value="#{avisoDePagoController.avisoDePago.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>				
+
+
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton action="#{avisoDePagoController.save}" value="Save" rendered="${!avisoDePagoController.isEditing()}" ajax="false" />
+	
+				<p:commandButton action="#{avisoDePagoController.merge}" value="Update" rendered="${avisoDePagoController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{avisoDePagoController.editing}"/>
+				</p:commandButton>
+				
+			</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+
+<!-- Table Todos los Avisos de Pagos -->
+
+		
+		<p:dataTable id="listTable" value="#{avisoDePagoController.avisoDePagos}" var="avisoDePago" style="margin-bottom:20px" rendered="#{sessionBean.getUser().esAdministradorDeUnidadCentral()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+			<f:facet name="header">  
+	            Todos los Avisos de Pagos (AdministradorCentral)
+	        </f:facet>
+	        
+	        <p:columnGroup type="header">
+				<p:row>  
+	                <p:column colspan="4" headerText="Aviso De Pago" />  
+	                <p:column colspan="6" headerText="Cuota" />
+	                <p:column rowspan="2" headerText="Actions" width="1" />  
+	            </p:row>
+	            <p:row>  
+	                <p:column headerText="Id" width="1" />  
+	                <p:column headerText="Monto" />  
+	                <p:column headerText="Fecha de pago"/> 
+	                <p:column headerText="Confirmado"/> 	                
+	                <p:column headerText="Id"/>
+	                <p:column headerText="Monto"/>  
+	                <p:column headerText="A pagar"/>  
+	                <p:column headerText="User"/>  
+	                <p:column headerText="Mes"/>
+	                <p:column headerText="Año"/>     
+            </p:row>
+            </p:columnGroup>
+
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{avisoDePago.id}" />
+    			</p:column>
+    		<p:column headerText="monto">
+				<h:outputText value="#{avisoDePago.monto}" >
+					<f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+				</h:outputText>
+    			</p:column>
+    		<p:column headerText="Fecha de avisoDePago">
+				<h:outputText value="#{avisoDePago.fecha}" />
+    			</p:column>
+    		<p:column headerText="Confirmado" styleClass="textCenter">
+    			<aca:outputBoolean value="#{avisoDePago.confirmado}" />
+    			</p:column>
+    		<p:column headerText="Id">
+				<h:outputText value="#{avisoDePago.cuota.id}" />
+    			</p:column>
+    		<p:column headerText="Monto">
+				<h:outputText value="$ #{avisoDePago.cuota.monto}" />
+    			</p:column>
+    		<p:column headerText="Monto a pagar">
+				<h:outputText value="$ #{avisoDePago.cuota.montoAPagar}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${avisoDePagoController.getUser(avisoDePago.cuota.socio).name}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="${avisoDePago.cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="${avisoDePago.cuota.year}" />
+    			</p:column>
+
+    		<p:column headerText="Actions" width="1">
+  
+    		<h:form>
+    			
+    			<p:commandButton action="#{avisoDePagoController.edit(avisoDePago)}"  icon="ui-icon-pencil" ajax="false">
+    				<f:setPropertyActionListener target="#{avisoDePagoController.editing}" value="true" />
+    			</p:commandButton>
+
+    			<p:commandButton action="#{avisoDePagoController.remove(avisoDePago)}" icon="ui-icon-trash" ajax="false"/>
+    		</h:form>
+    		</p:column>	
+    	<f:facet name="footer"><p/></f:facet>
+		</p:dataTable>
+		
+		
+
+<!-- Table Avisos de Pagos pendientes -->	
+
+		<p:dataTable value="#{avisoDePagoController.listPendientes}" var="avisoDePago" style="margin-bottom:20px" rendered="${sessionBean.getUser().esAdministradorDeUnidadCentral() or sessionBean.getUser().esOperadorDeUnidadCentral()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+		
+			<f:facet name="header">
+	            Avisos de Pagos pendientes (OperadorCentral)
+	        </f:facet>
+	        
+	        <p:columnGroup type="header">
+				<p:row>  
+	                <p:column colspan="4" headerText="Aviso De Pago" />  
+	                <p:column colspan="6" headerText="Cuota" />
+	                <p:column rowspan="2" headerText="Actions" width="1" />  
+	            </p:row>
+	            <p:row>  
+	                <p:column headerText="Id" width="1" />  
+	                <p:column headerText="Monto" />  
+	                <p:column headerText="Fecha de pago"/> 
+	                <p:column headerText="Confirmado"/> 
+	                <p:column headerText="Id"/>
+	                <p:column headerText="Monto"/>  
+	                <p:column headerText="A pagar"/>  
+	                <p:column headerText="User"/>  
+	                <p:column headerText="Mes"/>
+	                <p:column headerText="Año"/>     
+            </p:row>
+            </p:columnGroup>
+
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{avisoDePago.id}" />
+    			</p:column>
+    		<p:column headerText="monto">
+				<h:outputText value="#{avisoDePago.monto}" >
+					<f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+				</h:outputText>
+    			</p:column>
+    		<p:column headerText="Fecha de avisoDePago">
+				<h:outputText value="#{avisoDePago.fecha}" />
+    			</p:column>
+    		<p:column headerText="Confirmado" styleClass="textCenter">
+    			<aca:outputBoolean value="#{avisoDePago.confirmado}" />
+    			</p:column>
+    		<p:column headerText="Id">
+				<h:outputText value="#{avisoDePago.cuota.id}" />
+    			</p:column>
+    		<p:column headerText="Monto">
+				<h:outputText value="$ #{avisoDePago.cuota.monto}" />
+    			</p:column>
+    		<p:column headerText="Monto a pagar">
+				<h:outputText value="$ #{avisoDePago.cuota.montoAPagar}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${avisoDePagoController.getUser(avisoDePago.cuota.socio).name}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="${avisoDePago.cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="${avisoDePago.cuota.year}" />
+    			</p:column>
+
+    		<p:column headerText="Actions" width="1">
+    			
+    		<h:form>
+    			<p:commandButton value="Crear Pago" action="#{avisoDePagoController.confirmar(avisoDePago)}" ajax="false"/>
+    		</h:form>
+    		</p:column>	
+    		
+    		<f:facet name="footer"><p/></f:facet>
+		</p:dataTable>
+		
+		
+
+
+<!-- Form Aviso De Pago Sobre Mis Cuotas Pendientes -->
+
+	<p:fieldset legend="Crear aviso de pago sobre mis cuotas pendientes (SocioVirtual)" style="margin-bottom:20px" rendered="${!avisoDePagoController.isEditing() and sessionBean.getUser().esSocioVirtual()}">
+	<h:form>
+
+			<h:inputHidden value="#{avisoDePagoController.avisoDePago.id}" />
+			<h:panelGrid  columns="2">
+			
+				<h:outputText value="Cuota" />
+				<p:selectOneMenu value="#{avisoDePagoController.avisoDePago.cuota.id}" required="true"  >	
+					<f:selectItems value="#{avisoDePagoController.misCuotasPendientes}" var="cuota" itemValue="#{cuota.id}" itemLabel="#{cuota.id} - $ #{cuota.monto} - $ #{cuota.montoAPagar} - #{avisoDePagoController.getUser(cuota.socio).name} - #{cuota.month} - #{cuota.year}"/>  
+				</p:selectOneMenu>
+
+				<h:outputText value="monto" />
+				<p:spinner value="#{avisoDePagoController.avisoDePago.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>				
+
+
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton action="#{avisoDePagoController.save}" value="Save" ajax="false" />
+				
+			</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+
+
+
+
+<!-- Table Mis Avisos de Pagos -->		
+		
+		<p:dataTable value="#{avisoDePagoController.listAsSocioVirtual}" var="avisoDePago" style="margin-bottom:20px" rendered="#{sessionBean.getUser().esSocioVirtual()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+		
+			<f:facet name="header">  
+	            Mis Avisos de Pagos (SocioVirtual)
+	        </f:facet>
+	        
+	       <p:columnGroup type="header">
+				<p:row>  
+	                <p:column colspan="4" headerText="Aviso De Pago" />  
+	                <p:column colspan="6" headerText="Cuota" />
+	                <p:column rowspan="2" headerText="Actions" width="1" rendered="#{sessionBean.getUser().esAdministradorDeUnidadCentral()}"/>  
+	            </p:row>
+	            <p:row>  
+	                <p:column headerText="Id" width="1" />  
+	                <p:column headerText="Monto" />  
+	                <p:column headerText="Fecha de pago"/> 
+	                <p:column headerText="Confirmado"/> 
+	                <p:column headerText="Id"/>
+	                <p:column headerText="Monto"/>  
+	                <p:column headerText="A pagar"/>  
+	                <p:column headerText="User"/>  
+	                <p:column headerText="Mes"/>
+	                <p:column headerText="Año"/>     
+            </p:row>
+            </p:columnGroup>
+
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{avisoDePago.id}" />
+    			</p:column>
+    		<p:column headerText="monto">
+				<h:outputText value="#{avisoDePago.monto}" >
+					<f:convertNumber currencySymbol="$" groupingUsed="true" maxFractionDigits="2" type="currency" />
+				</h:outputText>
+    			</p:column>
+    		<p:column headerText="Fecha de avisoDePago">
+				<h:outputText value="#{avisoDePago.fecha}" />
+    			</p:column>
+    		<p:column headerText="Confirmado" styleClass="textCenter">
+    			<aca:outputBoolean value="#{avisoDePago.confirmado}" />
+    			</p:column>
+    		<p:column headerText="Id">
+				<h:outputText value="#{avisoDePago.cuota.id}" />
+    			</p:column>
+    		<p:column headerText="Monto">
+				<h:outputText value="$ #{avisoDePago.cuota.monto}" />
+    			</p:column>
+    		<p:column headerText="Monto a pagar">
+				<h:outputText value="$ #{avisoDePago.cuota.montoAPagar}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${avisoDePagoController.getUser(avisoDePago.cuota.socio).name}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="${avisoDePago.cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="${avisoDePago.cuota.year}" />
+    			</p:column>
+
+    		<p:column headerText="Actions" width="1" rendered="#{sessionBean.getUser().esAdministradorDeUnidadCentral()}">
+    			
+    		<h:form>
+    			<p:commandButton action="#{avisoDePagoController.edit(avisoDePago)}"  icon="ui-icon-pencil" ajax="false">
+    				<f:setPropertyActionListener target="#{avisoDePagoController.editing}" value="true" />
+    			</p:commandButton>
+
+    			<p:commandButton action="#{avisoDePagoController.remove(avisoDePago)}" icon="ui-icon-trash" ajax="false"/>
+    		</h:form>
+    		</p:column>
+    		
+    	<f:facet name="footer"><p/></f:facet>
+		</p:dataTable>
+		
+
+	</ui:define>
+</ui:composition>
+
+</html>

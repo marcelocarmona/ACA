@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="Producto" style="margin-bottom:20px" rendered="#{productoController.accessPermitted()}">
+	<h:form id="formCreate"><p:focus />
+	
+		<h:inputHidden value="#{productoController.producto.id}" />
+		<h:panelGrid id="data"  columns="2">
+			
+			<h:outputText value="Marca" />
+			<p:inputText value="#{productoController.producto.marca}" required="true" requiredMessage="Ingresar Marca" />
+			
+			<h:outputText value="Caracteristicas" />
+			<p:inputText value="#{productoController.producto.caracteristicas}" />
+			
+			<h:outputText value="rnpa" />
+			<p:inputText value="#{productoController.producto.rnpa}" />
+			
+			<h:outputText value="empresa" />
+			<p:inputText value="#{productoController.producto.empresa}" />
+			
+			<h:outputText value="rne" />
+			<p:inputText value="#{productoController.producto.rne}" />
+			
+			<h:outputText value="fechaAlta" />
+			<p:calendar value="#{productoController.producto.fechaAlta}" />
+			
+			<h:outputText value="fechaCertificado" />
+			<p:calendar value="#{productoController.producto.fechaCertificado}" />
+			
+			<h:outputText value="Comentario" />
+			<p:inputText value="#{productoController.producto.comentario}" />
+
+			<h:outputText value="Categoria" />
+			<p:inputText value="#{productoController.producto.categoria}" />			
+			
+		</h:panelGrid>
+		<h:panelGroup>
+				<p:commandButton  action="#{productoController.save}" value="Save" rendered="${!productoController.isEditing()}" ajax="false" />
+	
+				<p:commandButton  action="#{productoController.merge}" value="Update" rendered="${productoController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{productoController.editing}"/>
+				</p:commandButton>
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+
+
+
+
+		<p:panel style="margin-bottom:10px" rendered="${sessionBean.getUser().esSocio() or sessionBean.getUser().esSocioVirtual()}">
+			#{productoController.msgAlDia()}
+		</p:panel>
+		
+		<p:dataTable id="listTable" value="#{productoController.productos}" var="producto"  rendered="#{productoController.socioAlDia()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+		<f:facet name="header">  
+            Productos
+        </f:facet> 
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{producto.id}" />
+    			</p:column>
+    			
+    		<p:column headerText="Marca">
+				<h:outputText value="#{producto.marca}" />
+    			</p:column>
+    		
+    		<p:column headerText="caracteristicas">
+				<h:outputText value="#{producto.caracteristicas}" />
+    			</p:column>
+    			
+    		<p:column headerText="rnpa">
+				<h:outputText value="#{producto.rnpa}" />
+    			</p:column>
+  
+    		<p:column headerText="empresa">
+				<h:outputText value="#{producto.empresa}" />
+    			</p:column>
+    			  			
+    		<p:column headerText="rne">
+				<h:outputText value="#{producto.rne}" />
+    			</p:column>
+    			
+    		<p:column headerText="Comentario">
+				<h:outputText value="#{producto.comentario}" />
+    			</p:column>
+
+    		<p:column headerText="Categoria">
+				<h:outputText value="#{producto.categoria}" />
+    			</p:column>
+    			
+    		<p:column headerText="Actions" width="1" rendered="#{productoController.accessPermitted()}">
+	    		<h:form>
+	    			<p:commandButton action="#{productoController.edit(producto)}"  icon="ui-icon-pencil" ajax="false">
+	    				<f:setPropertyActionListener target="#{productoController.editing}" value="true" />
+	    			</p:commandButton>
+	
+	    			<p:commandButton action="#{productoController.remove(producto)}" icon="ui-icon-trash" ajax="false"/>
+	    		</h:form>
+    		</p:column>
+    		
+    	<f:facet name="footer"><p/></f:facet> 
+		</p:dataTable>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

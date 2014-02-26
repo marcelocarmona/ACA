@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+	
+
+	<p:fieldset legend="Pago (Administrador)" style="margin-bottom:20px" rendered="${sessionBean.user.esAdministradorDeUnidad()}" >
+	<h:form id="formCreate" ><p:focus />
+
+			<h:inputHidden value="#{pagoController.pago.id}" />
+			<h:panelGrid  columns="2">
+			
+				<h:outputText value="Cuota" />
+				<p:selectOneMenu value="#{pagoController.cuota.id}" required="true">	
+					<f:selectItems value="#{pagoController.cuotas}" var="cuota" itemValue="#{cuota.id}" itemLabel="#{cuota.id} - $ #{cuota.monto} - $ #{cuota.montoAPagar} - #{pagoController.getUser(cuota.socio).name} - #{cuota.month} - #{cuota.year}"/>  
+				</p:selectOneMenu>
+
+				<h:outputText value="monto" />
+				<p:spinner value="#{pagoController.pago.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>
+	
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton action="#{pagoController.save}" value="Save" rendered="${!pagoController.isEditing()}" ajax="false" />
+
+				<p:commandButton action="#{pagoController.merge}" value="Update" rendered="${pagoController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{pagoController.editing}"/>
+				</p:commandButton>
+				
+			</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+	<p:fieldset legend="Pago de cuotas Pendientes (Operador)" style="margin-bottom:20px" rendered="${!pagoController.isEditing() and (sessionBean.user.esAdministradorDeUnidad() or sessionBean.user.esOperadorDeUnidad())  }">
+	<h:form>
+
+			<h:inputHidden value="#{pagoController.pago.id}" />
+			<h:panelGrid  columns="2">
+			
+				<h:outputText value="Cuota" />
+				<p:selectOneMenu value="#{pagoController.cuota.id}" required="true"  >	
+					<f:selectItems value="#{pagoController.cuotasPendientes}" var="cuota" itemValue="#{cuota.id}" itemLabel="#{cuota.id} - $ #{cuota.monto} - $ #{cuota.montoAPagar} - #{pagoController.getUser(cuota.socio).name} - #{cuota.month} - #{cuota.year}"/>  
+				</p:selectOneMenu>
+
+				<h:outputText value="monto" />
+				<p:spinner value="#{pagoController.pago.monto}" prefix="$" min="0" maxlength="6" size="5" required="true" requiredMessage="Ingresar Monto">
+					<f:validateLongRange minimum="1" />
+				</p:spinner>
+	
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton action="#{pagoController.save}" value="Save"  ajax="false" />
+			</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+	<!-- Here we start the the data table -->
+		
+		<p:dataTable id="listTable" value="#{pagoController.pagos}" var="pago" rendered="#{sessionBean.user.esAdministradorDeUnidad() or sessionBean.user.esOperadorDeUnidad()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+			<f:facet name="header">  
+	            Todos los pagos (Administrador)
+	        </f:facet> 
+				
+			<p:columnGroup type="header">
+				<p:row>  
+	                <p:column colspan="3" headerText="Pago" />  
+	                <p:column colspan="6" headerText="Cuota" />
+	                <p:column rowspan="2" headerText="Actions" width="1"  rendered="${sessionBean.user.esAdministradorDeUnidad()}"/>  
+	            </p:row>
+	            <p:row>  
+	                <p:column headerText="Id" width="1" />  
+	                <p:column headerText="Monto" />  
+	                <p:column headerText="Fecha de pago"/> 
+	                <p:column headerText="Id"/>
+	                <p:column headerText="Monto"/>  
+	                <p:column headerText="A pagar"/>  
+	                <p:column headerText="User"/>  
+	                <p:column headerText="Mes"/>
+	                <p:column headerText="Año"/>     
+            </p:row>
+            </p:columnGroup>
+
+			<p:column>
+				<h:outputText value="#{pago.id}" />
+    			</p:column>
+    		<p:column >
+				<h:outputText value="$#{pago.monto}" />
+    			</p:column>
+    		<p:column headerText="Fecha de pago">
+				<h:outputText value="#{pago.fecha}" />
+    			</p:column>
+    		<p:column headerText="Id">
+				<h:outputText value="#{pago.cuota.id}" />
+    			</p:column>
+    		<p:column headerText="Monto">
+				<h:outputText value="$ #{pago.cuota.monto}" />
+    			</p:column>
+    		<p:column headerText="Monto a pagar">
+				<h:outputText value="$ #{pago.cuota.montoAPagar}" />
+    			</p:column>
+    		<p:column headerText="User">
+				<h:outputText value="${pagoController.getUser(pago.cuota.socio).name}" />
+    			</p:column>
+    		<p:column headerText="Mes">
+				<h:outputText value="${pago.cuota.month}" />
+    			</p:column>
+    		<p:column headerText="Año">
+				<h:outputText value="${pago.cuota.year}" />
+    			</p:column>
+    		<p:column headerText="Actions" width="1"  rendered="${sessionBean.user.esAdministradorDeUnidad()}">
+    			
+    		<h:form>
+    			<p:commandButton action="#{pagoController.edit(pago)}"  icon="ui-icon-pencil" ajax="false">
+    				<f:setPropertyActionListener target="#{pagoController.editing}" value="true" />
+    			</p:commandButton>
+
+    			<p:commandButton action="#{pagoController.remove(pago)}" icon="ui-icon-trash" ajax="false"/>
+    		</h:form>
+    		</p:column>	
+    		
+    	<f:facet name="footer"><p/></f:facet>
+    		
+		</p:dataTable>
+		
+
+	</ui:define>
+</ui:composition>
+
+</html>

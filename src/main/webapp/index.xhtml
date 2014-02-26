@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/templates/template.xhtml">
+	
+	<ui:define name="content">
+		
+<h1>Proyecto “Gestión de Socios de la Asociación Celíaca Argentina”</h1>
+
+<b>Objetivo: implementar una aplicación web, basada en tecnologías JAVA que permita la gestión de socios de la Asociación Celíaca Argentina.</b><br/>
+<br/>
+La aplicación deberá permitir gestionar los socios de la Asociación Celíaca Argentina (http://www.celiaco.org.ar/), los cuales se encuentran distribuidosen la sede central, filiales, delegaciones y grupos de referencia.<br/> 
+<br/>
+La aplicación permitiría a cada unidad (central, filial, delegación y grupo dereferencia) dar de alta a un socio (ficha del socio) y registrar el pago de lacuota  mensual. <br/> 
+Básicamente  el  sistema  normalizaría  la  información  desocios  la  Asociación;  todas  las  unidades  mantendrán  la  información actualizada a través de este sistema central. <br/>
+<br/>
+Los socios podrían a través de este sistema consultar la guía de productos (con sus actualizaciones), medicamentos, bares aptos para celíacos.<br/>
+<br/>
+<b>Servicio a los Socios:</b><br/>
+Cada socio que cumpla con la condición “Al día” pueda consultar la guía de alimentos, medicamentos, bares, etc aptos.<br/>
+La condición “Al día” de los socios va a determinarse de varias maneras según el caso:<br/>
+- Los socios pagan la cuota y se carga en el sistema el importe y fechade pago. <br/>
+- Considerar que los pagos pueden ser parciales.<br/>
+- Socios que por diferentes motivos (carenciados, etc) la asociación decide darle el beneficio<br/>
+- Otros que no serán socios que por diversos motivos la asociación decide permitirles el acceso (comedores escolares, cárceles, etc).<br/>
+<br/>
+Aunque el se concedan accesos al sitio a usuarios sin un pago previo esto no debe registrarse como pagado sino como solo un permiso para acceder.<br/>
+<br/>
+Algunos datos:<br/>
+<br/>
+Hay  una  sede  central,  filiales,  delegaciones  y  grupos  referentes (aproximadamente 20). Las filiales tienen sus autoridades, son elegidas por
+sus miembros y son autónomas económicamente. Las delegaciones sonsimilares, elegidas por sus socios, pero no tienen autonomía económica. Los
+grupos  referentes  son  grupos  o  asociaciones  que  colaboran  con  la Asociación.<br/>
+<br/>
+
+<b>Perfiles de usuarios del sistema:</b><br/>
+<br/><br/>
+<b>-  Socios:</b>  los  socios  que  posean  acceso,  ya  sea  por  cuota  paga  o simplemente porque se les concedió el mismo, tendrán la posibilidad de	
+consultar  online  los  productos,  bares,  etc  aptos  para  celiacos.  Además podrán visualizar la guía completa y las actualizaciones. También podrán
+actualizar  cierta  información  personal,  como  por  ejemplo  los  datos  de contacto (teléfono, domicilio, email, etc). <br/>
+<br/>
+El socio (sea cual sea) pueda consultar su cuenta corriente, ver el estado de su cuenta, cuánto debe, qué mes debe, etc. <br/>
+<br/>
+<b>-  Operadores  de  unidad:</b>  los  operadores  son  los  usuarios  que  tienen permiso para gestionar los socios de la unidad (filial, delegación) a la cual
+pertenecen. Son los encargados de registrar los socios, actualizar sus datos y registrar los pagos de los mismos.<br/>
+<br/><br/>
+<b>-  Administrador  de  unidad:</b>  estos  usuarios  son  los  encargados  de administrar los operadores de la unidad a la que pertenece.<br/>
+<br/>
+<b>- Socios virtuales:</b> ídem que los socios pero son gestionados directamente por la central.<br/>
+Actualmente la cuota la pueden pagar por depósito bancario, transferencia bancaria o en la sede central en efectivo. En un futuro  se podría llegar a
+pagar por pago fácil, bapro pagos, red link, banelco (como es muy costoso aun no está implementado). Generalmente el socio avisa mediante un correo
+electrónico o un llamado indicando su pago y el medio que utilizó pero con este sistema también debería poder informarlo via Web.<br/>
+<br/><br/>
+<b>- Operador de la central:</b> gestiona los socios propios de la central y socios virtuales, y posee acceso para consultar toda la información de los socios
+adheridos a través de las diferentes unidades.<br/>
+<br/><br/>
+<b>-  Administrador  central:</b>  gestiona  los  operadores  de  la  central  y  la información de filiales, delegaciones, grupos de referencia e instituciones
+beneficiarias (cárceles, comedores escolares, etc.).<br/>
+En general el valor de las cuota lo definiría la central, pero en ciertos casos podrían llegar a definirlo la filial, delegación, etc. Este valor de cuota debería
+tener asociado una opción que indique si la filial delegación, etc. puede cambiar ese valor de cuota.<br/>
+<br/>
+
+	</ui:define>
+
+</ui:composition>
+</html>

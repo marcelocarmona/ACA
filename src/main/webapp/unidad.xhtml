@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="Unidad" style="margin-bottom:20px" rendered="#{sessionBean.user.esAdministradorDeUnidadCentral()}">
+	<h:form id="formCreate"><p:focus />
+		
+		<h:inputHidden value="#{unidadController.unidad.id}" />
+		<h:panelGrid id="data"  columns="2">
+			
+			<h:outputText value="name" />
+			<p:inputText value="#{unidadController.unidad.name}" required="true" requiredMessage="Ingresar name" />
+			
+			<h:outputText value="responsible" />
+			<p:selectOneMenu value="#{unidadController.unidad.responsible.id}" required="true"  >	
+				<f:selectItems value="#{unidadController.usuarios}" var="user" itemValue="#{user.id}" itemLabel="#{user.name} - #{user.unidad.name}"/>  
+			</p:selectOneMenu>
+			
+			<h:outputText value="meetings" />
+			<p:inputText value="#{unidadController.unidad.meetings}" />	
+			
+			<h:outputText value="mail" />
+			<p:inputText value="#{unidadController.unidad.mail}" />				
+
+			<h:outputText value="phone" />
+			<p:inputText value="#{unidadController.unidad.phone}" />
+
+		</h:panelGrid>
+		<h:panelGroup>
+
+			<p:commandButton  action="#{unidadController.save}" value="Save" rendered="${!unidadController.isEditing()}" ajax="false" />
+	
+			<p:commandButton  action="#{unidadController.merge}" value="Update" rendered="${unidadController.isEditing()}" ajax="false">
+				<f:setPropertyActionListener value="#{false}" target="#{unidadController.editing}"/>
+			</p:commandButton>
+
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+	
+	
+	
+		<p:panel style="margin-bottom:10px" rendered="${sessionBean.getUser().esSocio() or sessionBean.getUser().esSocioVirtual()}">
+			#{unidadController.msgAlDia()}
+		</p:panel>
+	
+		<p:dataTable id="listTable" value="#{unidadController.unidades}" var="unidad" rendered="#{unidadController.socioAlDia()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+			<f:facet name="header">
+				Unidades
+			</f:facet> 
+				
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{unidad.id}" />
+    			</p:column>
+    			
+    		<p:column headerText="name">
+				<h:outputText value="#{unidad.name}" />
+    			</p:column>
+    			
+    		<p:column headerText="responsible">
+				<h:outputText value="#{unidad.responsible.name}" />
+    			</p:column>
+
+    		<p:column headerText="meetings">
+				<h:outputText value="#{unidad.meetings}" />
+    			</p:column>
+
+    		<p:column headerText="mail">
+				<h:outputText value="#{unidad.mail}" />
+    			</p:column>
+    			
+    		<p:column headerText="phone">
+				<h:outputText value="#{unidad.phone}" />
+    			</p:column>
+
+    			
+    		<p:column headerText="Actions" width="1" rendered="#{sessionBean.user.esAdministradorDeUnidadCentral()}">   		
+	    		<h:form>
+	    			<p:commandButton action="#{unidadController.edit(unidad)}"  icon="ui-icon-pencil" ajax="false">
+	    				<f:setPropertyActionListener target="#{unidadController.editing}" value="true" />
+	    			</p:commandButton>
+	
+	    			<p:commandButton action="#{unidadController.remove(unidad)}" icon="ui-icon-trash" ajax="false"/>
+	    		</h:form>
+    		</p:column>
+    		
+    	<f:facet name="footer"><p/></f:facet> 
+    	
+		</p:dataTable>
+
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

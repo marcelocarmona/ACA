@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+	
+
+	<p:fieldset legend="Medicamento" style="margin-bottom:20px" rendered="#{medicamentoController.accessPermitted()}">
+	<h:form id="formCreate" ><p:focus />
+
+			<h:inputHidden value="#{medicamentoController.medicamento.id}" />
+			<h:panelGrid  columns="2">
+
+				<h:outputText value="Name" />
+				<p:inputText value="#{medicamentoController.medicamento.name}"  required="true"  requiredMessage="Ingresar nombre de Medicamento" />
+	
+			</h:panelGrid>
+			<h:panelGroup>
+				<p:commandButton action="#{medicamentoController.save}" value="Save" rendered="${!medicamentoController.isEditing()}" ajax="false" />
+	
+				<p:commandButton action="#{medicamentoController.merge}" value="Update" rendered="${medicamentoController.isEditing()}" ajax="false">
+					<f:setPropertyActionListener value="#{false}" target="#{medicamentoController.editing}"/>
+				</p:commandButton>
+				
+			</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+	
+	
+	
+	
+		
+		<p:panel style="margin-bottom:10px" rendered="${sessionBean.getUser().esSocio() or sessionBean.getUser().esSocioVirtual()}">
+			#{medicamentoController.msgAlDia()}
+		</p:panel>
+	
+		<p:dataTable id="listTable" value="#{medicamentoController.medicamentos}" var="medicamento" rendered="#{medicamentoController.socioAlDia()}"
+				paginator="false" rows="0"  
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+				rowsPerPageTemplate="5,10,15">
+				
+		<f:facet name="header">  
+            Medicamentos 
+        </f:facet> 
+
+			<p:column headerText="Id" width="1">
+				<h:outputText value="#{medicamento.id}" />
+    			</p:column>
+    		<p:column headerText="Name">
+				<h:outputText value="#{medicamento.name}" />
+    			</p:column>
+
+    		<p:column headerText="Actions" width="1" rendered="#{medicamentoController.accessPermitted()}">
+    			
+    		<h:form>
+    			<p:commandButton action="#{medicamentoController.edit(medicamento)}"  icon="ui-icon-pencil" ajax="false">
+    				<f:setPropertyActionListener target="#{medicamentoController.editing}" value="true" />
+    			</p:commandButton>
+
+    			<p:commandButton action="#{medicamentoController.remove(medicamento)}" icon="ui-icon-trash" ajax="false"/>
+    		</h:form>
+    		</p:column>	
+    	
+    	<f:facet name="footer"><p/></f:facet> 
+    		
+		</p:dataTable>
+
+		
+
+	</ui:define>
+</ui:composition>
+
+</html>

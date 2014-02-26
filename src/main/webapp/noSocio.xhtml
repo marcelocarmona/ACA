@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="Asignar una institucion a un NoSocio (Operador)"
+		style="margin-top:20px" rendered="${noSocioController.accessPermitted()}">
+		<h:form id="formCreate"><p:focus />
+			
+			<h:panelGrid columns="2">
+			
+			<h:outputText value="Institucion" />
+			<p:selectOneMenu value="#{noSocioController.institucion.id}" required="true">	
+				<f:selectItems value="#{institucionController.instituciones}" var="inst" itemValue="#{inst.id}" itemLabel="#{inst.name}"/>  
+			</p:selectOneMenu>	
+
+
+			<h:outputText value="Usuario NoSocio" />
+			<p:selectOneMenu value="#{noSocioController.user.id}" required="true"  >	
+				<f:selectItems value="#{noSocioController.usuarios}" var="user" itemValue="#{user.id}" itemLabel="#{user.name} - #{user.unidad.name}"/>  
+			</p:selectOneMenu>
+	
+			
+			<p:commandButton action="#{noSocioController.asignar}"
+				value="Asignar" ajax="false" />
+			</h:panelGrid>
+
+			</h:form>
+	</p:fieldset>
+	
+	
+	<p:dataTable value="#{noSocioController.usuarios}" var="UserNoSocio" 
+			paginator="false" rows="0"  
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+			rowsPerPageTemplate="5,10,15" style="margin-top:20px" rendered="${noSocioController.accessPermitted()}">
+			
+			
+		<f:facet name="header">  
+            NoSocios - Instituciones 
+        </f:facet> 
+        <p:columnGroup type="header">
+	        <p:row> 
+		        <p:column headerText="Id" width="1"/>  
+				<p:column headerText="Name" />
+				<p:column headerText="Actions" width="1"/>  
+		    </p:row>
+        </p:columnGroup>
+        
+        <p:subTable var="institucion" value="#{noSocioController.getInstituciones(UserNoSocio)}"> 
+            <f:facet name="header">  
+              #{UserNoSocio.name}   
+            </f:facet>  
+
+            <p:column>  
+                #{institucion.id}   
+            </p:column>  
+
+            <p:column>  
+                 #{institucion.name}   
+            </p:column> 
+
+           	<p:column headerText="Actions" width="1" >			
+	    		<h:form>
+	    			<p:commandButton action="#{noSocioController.remove(UserNoSocio,institucion)}"  icon="ui-icon-trash" ajax="false"/>
+	    		</h:form>
+   			</p:column>
+
+        </p:subTable>
+        
+    	<f:facet name="footer"><p/></f:facet> 
+
+	</p:dataTable>
+
+
+	</ui:define>
+</ui:composition>
+
+</html>

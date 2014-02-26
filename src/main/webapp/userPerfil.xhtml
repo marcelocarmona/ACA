@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:aca="http://java.sun.com/jsf/composite/components">
+
+<ui:composition template="/templates/template.xhtml">
+	<ui:define name="content">
+
+
+	<p:fieldset legend="#{userPerfilBean.user.name} : Modificar Datos Personales" style="margin-bottom:20px" rendered="#{sessionBean.islogin()}">
+	<h:form id="formCreate"  ><p:focus />
+		<h:panelGrid id="data"  columns="2">
+			
+			<h:outputText value="mail" />
+			<p:inputText value="#{userPerfilBean.user.mail}" />
+						
+			<h:outputText value="dateOfBirth" />
+			<p:calendar value="#{userPerfilBean.user.dateOfBirth}" />
+
+			<h:outputText value="phone" />
+			<p:inputText value="#{userPerfilBean.user.phone}" />
+
+			<h:outputText value="address" />
+			<p:inputText value="#{userPerfilBean.user.address}" />
+
+		</h:panelGrid>
+		<h:panelGroup>
+
+			<p:commandButton actionListener="#{userPerfilBean.merge}" value="Update" update=":messages"  />
+
+		</h:panelGroup>
+	</h:form>
+	</p:fieldset>
+	
+
+	</ui:define>
+</ui:composition>
+
+</html>
