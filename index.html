@@ -28,37 +28,75 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+	
+<h1>Proyecto “Gestión de Socios de la Asociación Celíaca Argentina”</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+Objetivo: implementar una aplicación web, basada en tecnologías JAVA que permita la gestión de socios de la Asociación Celíaca Argentina.</b><br>
+<br>
+La aplicación deberá permitir gestionar los socios de la Asociación Celíaca Argentina (http://www.celiaco.org.ar/), los cuales se encuentran distribuidosen la sede central, filiales, delegaciones y grupos de referencia.<br> 
+<br>
+La aplicación permitiría a cada unidad (central, filial, delegación y grupo dereferencia) dar de alta a un socio (ficha del socio) y registrar el pago de lacuota  mensual. <br> 
+Básicamente  el  sistema  normalizaría  la  información  desocios  la  Asociación;  todas  las  unidades  mantendrán  la  información actualizada a través de este sistema central. <br>
+<br>
+Los socios podrían a través de este sistema consultar la guía de productos (con sus actualizaciones), medicamentos, bares aptos para celíacos.<br>
+<br>
+<h3>Servicio a los Socios:</h3><br>
+Cada socio que cumpla con la condición “Al día” pueda consultar la guía de alimentos, medicamentos, bares, etc aptos.<br>
+La condición “Al día” de los socios va a determinarse de varias maneras según el caso:<br>
+- Los socios pagan la cuota y se carga en el sistema el importe y fechade pago. <br>
+- Considerar que los pagos pueden ser parciales.<br>
+- Socios que por diferentes motivos (carenciados, etc) la asociación decide darle el beneficio<br>
+- Otros que no serán socios que por diversos motivos la asociación decide permitirles el acceso (comedores escolares, cárceles, etc).<br>
+<br>
+Aunque el se concedan accesos al sitio a usuarios sin un pago previo esto no debe registrarse como pagado sino como solo un permiso para acceder.<br>
+<br>
+Algunos datos:<br>
+<br>
+Hay  una  sede  central,  filiales,  delegaciones  y  grupos  referentes (aproximadamente 20). Las filiales tienen sus autoridades, son elegidas por
+sus miembros y son autónomas económicamente. Las delegaciones sonsimilares, elegidas por sus socios, pero no tienen autonomía económica. Los
+grupos  referentes  son  grupos  o  asociaciones  que  colaboran  con  la Asociación.<br>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h3>Perfiles de usuarios del sistema:</h3>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<b>-  Socios:</b>  los  socios  que  posean  acceso,  ya  sea  por  cuota  paga  o simplemente porque se les concedió el mismo, tendrán la posibilidad de	
+consultar  online  los  productos,  bares,  etc  aptos  para  celiacos.  Además podrán visualizar la guía completa y las actualizaciones. También podrán
+actualizar  cierta  información  personal,  como  por  ejemplo  los  datos  de contacto (teléfono, domicilio, email, etc). <br>
+<br>
+El socio (sea cual sea) pueda consultar su cuenta corriente, ver el estado de su cuenta, cuánto debe, qué mes debe, etc. <br>
+<br>
+<h4>Operadores  de  unidad:</h4>  los  operadores  son  los  usuarios  que  tienen permiso para gestionar los socios de la unidad (filial, delegación) a la cual
+pertenecen. Son los encargados de registrar los socios, actualizar sus datos y registrar los pagos de los mismos.<br>
+<br><br>
+<b>-  Administrador  de  unidad:</h4>  estos  usuarios  son  los  encargados  de administrar los operadores de la unidad a la que pertenece.<br>
+<br>
+<h4>Socios virtuales:</h4> ídem que los socios pero son gestionados directamente por la central.<br>
+Actualmente la cuota la pueden pagar por depósito bancario, transferencia bancaria o en la sede central en efectivo. En un futuro  se podría llegar a
+pagar por pago fácil, bapro pagos, red link, banelco (como es muy costoso aun no está implementado). Generalmente el socio avisa mediante un correo
+electrónico o un llamado indicando su pago y el medio que utilizó pero con este sistema también debería poder informarlo via Web.<br>
+<br><br>
+<h4>Operador de la central:</h4> gestiona los socios propios de la central y socios virtuales, y posee acceso para consultar toda la información de los socios
+adheridos a través de las diferentes unidades.<br>
+<br><br>
+<h4>Administrador  central:</h4>  gestiona  los  operadores  de  la  central  y  la información de filiales, delegaciones, grupos de referencia e instituciones
+beneficiarias (cárceles, comedores escolares, etc.).<br>
+En general el valor de las cuota lo definiría la central, pero en ciertos casos podrían llegar a definirlo la filial, delegación, etc. Este valor de cuota debería
+tener asociado una opción que indique si la filial delegación, etc. puede cambiar ese valor de cuota.<br>
+<br>
+<h2>UML Model</h2>
+<a href="images/model.png"><img src="images/model.png"></a>
+       
+<h2>DAO Pattern</h2>
+Se utilizó el patrón DAO para realizar la capa de acceso de la aplicación en el siguiente UML se puede ver un ejemplo del patrón utilizando algunas de las clases de la aplicación
+<a href="images/acceso.png"><img src="images/acceso.png"></a>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h2>Java Server Faces - Generic Controller</h2>  
+Se realizo un controller genérico para los objetos utilizados por jsf
+<a href="images/bakingBeans.png"><img src="images/bakingBeans.png"></a>    
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<h2>Permisos - Tabla de permisos según el tipo de usuario</h2>
+<a href="images/permisos.JPG"><img src="images/permisos.JPG"></a>    
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
         </section>
 
         <aside id="sidebar">
